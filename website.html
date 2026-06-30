@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoboCup Rescue — UNSW VIP AI4Everyone</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --yellow: #FFD000;
+    --yellow-deep: #E6BC00;
+    --black: #111111;
+    --white: #ffffff;
+    --gray-100: #F5F5F3;
+    --gray-200: #E8E8E4;
+    --gray-400: #AEADA8;
+    --gray-600: #6B6A66;
+    --gray-900: #1A1A18;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--black); line-height: 1.6; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3rem; height: 60px;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .nav-brand {
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem;
+    color: var(--black); text-decoration: none; letter-spacing: -0.01em;
+  }
+  .nav-brand span { color: var(--gray-400); font-weight: 400; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: var(--gray-600); text-decoration: none; font-size: 0.875rem; font-weight: 400; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--black); }
+  .nav-bar-accent { width: 28px; height: 3px; background: var(--yellow); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; padding: 60px 0 0;
+    display: grid; grid-template-columns: 1fr 1fr;
+  }
+  .hero-left {
+    padding: 6rem 4rem 5rem 3rem;
+    display: flex; flex-direction: column; justify-content: center;
+    border-right: 1px solid var(--gray-200);
+  }
+  .hero-right {
+    background: var(--yellow);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 3rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-eyebrow {
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gray-600);
+    margin-bottom: 1.5rem;
+  }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 7vw, 7rem);
+    line-height: 0.95; letter-spacing: 0.01em;
+    color: var(--black); margin-bottom: 1.75rem;
+  }
+  .hero-sub {
+    font-size: 1.05rem; color: var(--gray-600); max-width: 440px;
+    line-height: 1.75; font-weight: 300; margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--black); color: var(--white);
+    padding: 0.8rem 1.75rem; font-size: 0.9rem; font-weight: 500;
+    text-decoration: none; letter-spacing: 0.01em;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: var(--gray-900); }
+  .btn-ghost {
+    border: 1px solid var(--gray-200); color: var(--black);
+    padding: 0.8rem 1.75rem; font-size: 0.9rem; font-weight: 400;
+    text-decoration: none; transition: border-color 0.15s;
+  }
+  .btn-ghost:hover { border-color: var(--black); }
+  .hero-right-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 12vw, 11rem);
+    line-height: 0.9; color: rgba(0,0,0,0.12);
+    position: absolute; top: 2rem; left: 2rem; right: 2rem;
+    pointer-events: none; user-select: none;
+  }
+  .hero-right-content {
+    position: relative; z-index: 1;
+  }
+  .hero-right-content .big-stat {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem; line-height: 1; color: var(--black);
+    margin-bottom: 0.25rem;
+  }
+  .hero-right-content .stat-desc {
+    font-size: 0.85rem; font-weight: 500; color: rgba(0,0,0,0.55);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 2rem;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--black); color: var(--yellow);
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 0.4rem 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--gray-200); }
+
+  /* SECTION BASE */
+  section { padding: 6rem 3rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gray-400); margin-bottom: 1rem;
+  }
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1; color: var(--black);
+    margin-bottom: 1.5rem; letter-spacing: 0.01em;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+    align-items: start; margin-top: 3rem;
+  }
+  .about-text p { color: var(--gray-600); font-size: 1rem; line-height: 1.8; font-weight: 300; }
+  .about-text p + p { margin-top: 1rem; }
+  .about-right { display: flex; flex-direction: column; gap: 0; }
+  .info-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 1.25rem 0; border-bottom: 1px solid var(--gray-200);
+  }
+  .info-row:first-child { border-top: 1px solid var(--gray-200); }
+  .info-key { font-size: 0.78rem; font-weight: 500; color: var(--gray-400); letter-spacing: 0.08em; text-transform: uppercase; }
+  .info-val { font-size: 0.95rem; font-weight: 500; color: var(--black); text-align: right; max-width: 60%; }
+  .yellow-block {
+    background: var(--yellow); padding: 1.75rem; margin-top: 1.5rem;
+  }
+  .yellow-block p { font-size: 1rem; font-weight: 400; color: var(--black); line-height: 1.65; }
+  .yellow-block strong { font-weight: 600; }
+
+  /* TECH */
+  .tech { background: var(--gray-100); }
+  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 3rem; border-top: 1px solid var(--gray-200); border-left: 1px solid var(--gray-200); }
+  .pillar {
+    padding: 2rem; border-right: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-100); transition: background 0.2s;
+    display: block; color: inherit; text-decoration: none;
+  }
+  .pillar:hover, .pillar:focus-visible { background: var(--white); }
+  .pillar:focus-visible { outline: 2px solid var(--black); outline-offset: -2px; }
+  .pillar-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--gray-200);
+    line-height: 1; margin-bottom: 1rem;
+  }
+  .pillar h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--black); }
+  .pillar p { font-size: 0.88rem; color: var(--gray-600); line-height: 1.7; font-weight: 300; }
+  .pillar-more {
+    display: inline-block; margin-top: 1rem;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--black);
+  }
+  .tech-details {
+    margin-top: 4rem; display: flex; flex-direction: column; gap: 1px;
+    background: var(--gray-200); border: 1px solid var(--gray-200);
+  }
+  .tech-detail {
+    scroll-margin-top: 84px;
+    background: var(--white);
+    display: grid; grid-template-columns: minmax(260px, 0.85fr) 1.15fr;
+    gap: 0; align-items: stretch;
+  }
+  .tech-detail-media {
+    background: var(--gray-100); min-height: 320px; line-height: 0;
+    border-right: 1px solid var(--gray-200);
+  }
+  .tech-detail-media img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .tech-detail-body { padding: 2.5rem; }
+  .tech-detail-kicker {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--yellow-deep); margin-bottom: 0.5rem;
+  }
+  .tech-detail h3 {
+    font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1; letter-spacing: 0.01em; margin-bottom: 1rem; color: var(--black);
+  }
+  .tech-detail-body p {
+    color: var(--gray-600); font-size: 0.96rem; line-height: 1.75; font-weight: 300;
+  }
+  .tech-points {
+    list-style: none; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.6rem 1.25rem; margin-top: 1.5rem;
+  }
+  .tech-points li {
+    font-size: 0.85rem; color: var(--gray-600); line-height: 1.55;
+    border-top: 1px solid var(--gray-200); padding-top: 0.65rem;
+  }
+
+  /* GALLERY */
+  .gallery-intro { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--gray-200); }
+  .gallery-item {
+    background: var(--gray-100);
+    aspect-ratio: 4/3;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.75rem; cursor: pointer; transition: background 0.15s;
+  }
+  .gallery-item:hover { background: var(--gray-200); }
+  .gallery-item.wide { grid-column: span 2; aspect-ratio: unset; min-height: 280px; }
+  .gallery-icon { width: 36px; height: 36px; opacity: 0.25; }
+  .gallery-label { font-size: 0.78rem; color: var(--gray-400); text-align: center; line-height: 1.5; }
+  .upload-note {
+    margin-top: 1rem; font-size: 0.8rem; color: var(--gray-400);
+    border: 1px dashed var(--gray-200); padding: 0.75rem 1.25rem; display: inline-block;
+  }
+
+  /* VIDEO STRIP */
+  .video-strip {
+    width: 100%; line-height: 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .video-strip video {
+    width: 100%; max-height: 540px; object-fit: cover; display: block;
+  }
+
+  /* BONDING IMAGE */
+  .about-photo {
+    margin-top: 2.5rem; line-height: 0;
+  }
+  .about-photo img {
+    width: 100%; max-height: 420px; object-fit: cover; display: block;
+  }
+
+  /* TIMELINE */
+  .timeline { background: var(--white); }
+  .timeline-track {
+    position: relative; margin-top: 3rem;
+    padding-left: 2rem;
+  }
+  .timeline-track::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 2px; background: var(--gray-200);
+  }
+  .timeline-phase { margin-bottom: 3rem; position: relative; }
+  .timeline-phase:last-child { margin-bottom: 0; }
+  .timeline-dot {
+    position: absolute; left: -2.45rem; top: 0.35rem;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--gray-200); border: 2px solid var(--white);
+    box-shadow: 0 0 0 2px var(--gray-200);
+  }
+  .timeline-phase.complete .timeline-dot {
+    background: var(--yellow); box-shadow: 0 0 0 2px var(--yellow-deep);
+  }
+  .timeline-phase.in-progress .timeline-dot {
+    background: var(--black); box-shadow: 0 0 0 2px var(--black);
+  }
+  .timeline-period {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gray-400); margin-bottom: 0.4rem;
+  }
+  .timeline-phase.complete .timeline-period { color: var(--yellow-deep); }
+  .timeline-phase.in-progress .timeline-period { color: var(--black); }
+  .timeline-heading {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;
+    color: var(--black); margin-bottom: 1rem; letter-spacing: 0.02em;
+  }
+  .timeline-goals { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .timeline-goals li {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    font-size: 0.9rem; color: var(--gray-600); font-weight: 300; line-height: 1.55;
+  }
+  .timeline-goals li::before {
+    content: '—'; color: var(--gray-400); flex-shrink: 0; margin-top: 0.05em;
+  }
+  .timeline-phase.complete .timeline-goals li::before { color: var(--yellow-deep); }
+  .timeline-goals li.placeholder {
+    color: var(--gray-400); font-style: italic;
+  }
+  .tl-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.15rem 0.55rem; margin-left: 0.5rem; vertical-align: middle;
+    background: var(--yellow); color: var(--black);
+  }
+  .timeline-phase.in-progress .tl-badge { background: var(--black); color: var(--yellow); }
+
+  /* LINKS */
+  .links { background: var(--black); }
+  .links h2 { color: var(--white); }
+  .links .section-label { color: var(--gray-600); }
+  .resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.08); margin-top: 3rem; }
+  .resource-card {
+    background: var(--black); padding: 2rem;
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; gap: 0.75rem;
+    transition: background 0.15s; border: none;
+  }
+  .resource-card:hover { background: #1c1c1a; }
+  .rc-tag { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow); }
+  .resource-card h3 { font-size: 1rem; font-weight: 500; color: var(--white); line-height: 1.35; }
+  .resource-card p { font-size: 0.85rem; color: var(--gray-400); line-height: 1.65; font-weight: 300; flex: 1; }
+  .rc-arrow { color: var(--yellow); font-size: 1.1rem; margin-top: 0.5rem; }
+
+  /* JOIN */
+  .join-inner {
+    border: 1px solid var(--gray-200); padding: 4rem;
+  }
+  .join-inner h2 { margin-bottom: 0.75rem; }
+  .join-inner > p { color: var(--gray-600); max-width: 560px; font-size: 1rem; font-weight: 300; line-height: 1.75; margin-bottom: 2.5rem; }
+  .skill-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+  .chip {
+    background: var(--gray-100); border: 1px solid var(--gray-200);
+    padding: 0.3rem 0.85rem; font-size: 0.8rem; color: var(--gray-600); font-weight: 400;
+  }
+
+  /* FOOTER */
+  footer { background: var(--gray-100); border-top: 1px solid var(--gray-200); padding: 2.5rem 3rem; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 2rem; }
+  .footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--black); }
+  .footer-brand p { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--gray-400); font-weight: 400; margin-top: 0.25rem; }
+  .footer-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+  .footer-links a { color: var(--gray-600); text-decoration: none; font-size: 0.85rem; transition: color 0.15s; }
+  .footer-links a:hover { color: var(--black); }
+  .ack { max-width: 1100px; margin: 1.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--gray-200); font-size: 0.78rem; color: var(--gray-400); line-height: 1.7; }
+
+  @media(max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 5rem 1.5rem 3rem; border-right: none; border-bottom: 1px solid var(--gray-200); }
+    .hero-right { min-height: 280px; padding: 2rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .pillars { grid-template-columns: 1fr 1fr; }
+    .tech-detail { grid-template-columns: 1fr; }
+    .tech-detail-media { border-right: none; border-bottom: 1px solid var(--gray-200); min-height: 240px; }
+    .tech-points { grid-template-columns: 1fr; }
+    .resource-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item.wide { grid-column: span 2; }
+    section { padding: 4rem 1.5rem; }
+    .join-inner { padding: 2.5rem 1.5rem; }
+    footer { padding: 2rem 1.5rem; }
+  }
+  @media(max-width: 560px) {
+    .pillars { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .gallery-item.wide { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="#hero">UNSW VIP <span>· RoboCup Rescue</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#tech">Technology</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#links">Links</a></li>
+  </ul>
+  <div class="nav-bar-accent"></div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">UNSW VIP · AI4Everyone</p>
+    <h1>UNSW's<br>RoboCup<br>Rescue</h1>
+    <p class="hero-sub">We're building an AI-powered quadruped robot that navigates disaster zones, maps unknown environments, and identifies survivors — autonomously.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#about">Explore the project</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-label" aria-hidden="true">GO2</div>
+    <div class="hero-right-content">
+      <div class="hero-tag">International Competition</div>
+      <div class="big-stat">RoboCup<br>Rescue</div>
+      <div class="stat-desc">Autonomous search &amp; rescue · Annual global contest</div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO STRIP -->
+<div class="video-strip">
+  <video src="RoboCup 7News.mp4" autoplay muted loop playsinline></video>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <p class="section-label">The Project</p>
+    <h2>Search &amp; rescue,<br>driven by AI</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>The RoboCup Rescue competition is an international robotics contest focused on developing robots capable of performing search and rescue operations in simulated disaster environments.</p>
+        <p>We equip a Unitree Go2 quadruped robot with advanced autonomous capabilities — environment exploration, victim identification, and real-time mapping — all running within the Robot Operating System (ROS).</p>
+        <p>Building on the efforts of previous teams, our goal is to create a highly competitive entry for the annual competition through sophisticated algorithms for SLAM, navigation, and computer vision.</p>
+        <div class="about-photo">
+          <img src="bonding.jpg" alt="Team working on the robot">
+        </div>
+      </div>
+      <div class="about-right">
+        <div class="info-row">
+          <span class="info-key">Robot Platform</span>
+          <span class="info-val">Unitree Go2 Quadruped</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Framework</span>
+          <span class="info-val">Robot Operating System (ROS)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Program</span>
+          <span class="info-val">UNSW ChallENG — Vertically Integrated Projects</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Team Members</span>
+          <span class="info-val">Victor Lim, Lukas Nielsen, Jet Lin, Julie Yang, Sam Gould, Tony Tang, Anthony Wang, Jodie Dsouza, Sho Watanabe, Zoeb Karim, Yuheng (Andy) Jian, Mindy Liu, Quanlin Wang, Siddharth Thathatripuram </span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Academic Leads</span>
+          <span class="info-val">Dr. Yang Song &amp; Prof. Maurice Pagnucco</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- TECH -->
+<section id="tech" class="tech">
+  <div class="container">
+    <p class="section-label">What we build</p>
+    <h2>The technology stack</h2>
+    <div class="pillars">
+      <a class="pillar" href="#tech-slam">
+        <div class="pillar-num">01</div>
+        <h3>3D Mapping &amp; SLAM</h3>
+        <p>Simultaneous localisation and mapping algorithms build a real-time 3D model of the environment as the robot moves through unknown terrain.</p>
+        <span class="pillar-more">View details</span>
+      </a>
+      <a class="pillar" href="#tech-navigation">
+        <div class="pillar-num">02</div>
+        <h3>Autonomous Navigation</h3>
+        <p>Path-planning and obstacle avoidance enable the robot to traverse complex, cluttered environments without any human input.</p>
+        <span class="pillar-more">View details</span>
+      </a>
+      <a class="pillar" href="#tech-vision">
+        <div class="pillar-num">03</div>
+        <h3>Computer Vision</h3>
+        <p>Deep learning models identify victims, hazards, and landmarks from camera and depth sensor streams, in real time.</p>
+        <span class="pillar-more">View details</span>
+      </a>
+      <a class="pillar" href="#tech-ros">
+        <div class="pillar-num">04</div>
+        <h3>ROS Architecture</h3>
+        <p>All modules — sensors, planners, controllers — communicate through ROS, enabling modular development and fast iteration.</p>
+        <span class="pillar-more">View details</span>
+      </a>
+      <a class="pillar" href="#tech-fusion">
+        <div class="pillar-num">05</div>
+        <h3>Sensor Fusion</h3>
+        <p>LiDAR, IMU, and RGB-D cameras are fused to give the robot a robust, low-latency understanding of its surroundings.</p>
+        <span class="pillar-more">View details</span>
+      </a>
+      <a class="pillar" href="#tech-ai">
+        <div class="pillar-num">06</div>
+        <h3>AI Decision-Making</h3>
+        <p>Behaviour trees and reinforcement-learned policies coordinate exploration strategies to maximise victim-detection coverage.</p>
+        <span class="pillar-more">View details</span>
+      </a>
+    </div>
+
+    <div class="tech-details">
+      <article class="tech-detail" id="tech-slam">
+        <div class="tech-detail-media">
+          <img src="3D Mapping &amp; SLAM.png" alt="3D mapping and SLAM technology detail">
+        </div>
+        <div class="tech-detail-body">
+          <p class="tech-detail-kicker">01 · Mapping</p>
+          <h3>3D Mapping &amp; SLAM</h3>
+          <p>SLAM gives the robot a live understanding of where it is and what the environment looks like. The team works with LiDAR point clouds, map saving, coordinate transforms, and simulation pipelines so mapping can be tested before deployment on the Go2.</p>
+          <ul class="tech-points">
+            <li>LiDAR point cloud processing</li>
+            <li>Real-time localisation</li>
+            <li>Map export for navigation</li>
+            <li>Simulation-to-hardware validation</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="tech-detail" id="tech-navigation">
+        <div class="tech-detail-media">
+          <img src="Autonomous Navigation.png" alt="Autonomous navigation technology detail">
+        </div>
+        <div class="tech-detail-body">
+          <p class="tech-detail-kicker">02 · Navigation</p>
+          <h3>Autonomous Navigation</h3>
+          <p>Navigation converts maps and mission goals into safe robot motion. This includes choosing reachable goals, planning paths around obstacles, recovering from blocked routes, and integrating movement commands with the quadruped control stack.</p>
+          <ul class="tech-points">
+            <li>Nav2 path planning</li>
+            <li>Obstacle avoidance</li>
+            <li>Goal selection and recovery</li>
+            <li>Go2 movement integration</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="tech-detail" id="tech-vision">
+        <div class="tech-detail-media">
+          <img src="Computer Vision.png" alt="Computer vision technology detail">
+        </div>
+        <div class="tech-detail-body">
+          <p class="tech-detail-kicker">03 · Perception</p>
+          <h3>Computer Vision</h3>
+          <p>Computer vision helps the robot recognise rescue-relevant objects from camera and depth data. The goal is to detect victims, hazards, and visual landmarks reliably enough to support autonomous inspection and reporting.</p>
+          <ul class="tech-points">
+            <li>Victim detection models</li>
+            <li>RGB-D camera streams</li>
+            <li>Hazard and landmark recognition</li>
+            <li>Hardware deployment pipeline</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="tech-detail" id="tech-ros">
+        <div class="tech-detail-media">
+          <img src="ROS Architecture.png" alt="ROS architecture technology detail">
+        </div>
+        <div class="tech-detail-body">
+          <p class="tech-detail-kicker">04 · System</p>
+          <h3>ROS Architecture</h3>
+          <p>ROS keeps the project modular. Sensors, mapping, navigation, control, web monitoring, and development tools communicate through topics, services, actions, and launch files so each subsystem can be developed and tested independently.</p>
+          <ul class="tech-points">
+            <li>ROS nodes and topics</li>
+            <li>Services and launch files</li>
+            <li>Container-based development</li>
+            <li>Monitoring and debugging tools</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="tech-detail" id="tech-fusion">
+        <div class="tech-detail-media">
+          <img src="Sensor Fusion.png" alt="Sensor fusion technology detail">
+        </div>
+        <div class="tech-detail-body">
+          <p class="tech-detail-kicker">05 · Sensors</p>
+          <h3>Sensor Fusion</h3>
+          <p>Sensor fusion combines LiDAR, IMU, camera, and depth information into a more stable estimate than any single sensor can provide. This improves mapping, localisation, and decision-making in cluttered rescue environments.</p>
+          <ul class="tech-points">
+            <li>LiDAR and IMU alignment</li>
+            <li>Camera-depth integration</li>
+            <li>Robust state estimation</li>
+            <li>Low-latency data flow</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="tech-detail" id="tech-ai">
+        <div class="tech-detail-media">
+          <img src="AI Decision-Making.png" alt="AI decision-making technology detail">
+        </div>
+        <div class="tech-detail-body">
+          <p class="tech-detail-kicker">06 · Autonomy</p>
+          <h3>AI Decision-Making</h3>
+          <p>Decision-making coordinates the robot's exploration strategy. It connects perception, mapping, and navigation so the robot can decide where to inspect next, when to recover, and how to prioritise rescue-relevant discoveries.</p>
+          <ul class="tech-points">
+            <li>Exploration strategy</li>
+            <li>Behaviour-tree style logic</li>
+            <li>Inspection prioritisation</li>
+            <li>Mission-level autonomy</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- TIMELINE -->
+<section id="timeline" class="timeline">
+  <div class="container">
+    <p class="section-label">Project Progress</p>
+    <h2>Road to<br>RoboCup 2027</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: stretch; margin-top: 3rem;">
+      <div class="timeline-track" style="margin-top: 0;">
+
+        <!-- Phase 1: By May 2026 — complete -->
+        <div class="timeline-phase complete">
+          <div class="timeline-dot"></div>
+          <p class="timeline-period">By May 2026 <span class="tl-badge">Achieved</span></p>
+          <p class="timeline-heading">Foundations &amp; Simulation</p>
+          <ul class="timeline-goals">
+            <li>SLAM simulated efficiently using a single transformed point cloud</li>
+            <li>Nav2 Map Saver service integrated — exports PNG maps to the filesystem</li>
+            <li>Camera vision pipeline ready for deployment</li>
+            <li class="placeholder">Movement goal — TBD</li>
+          </ul>
+        </div>
+
+        <!-- Phase 2: By End of August 2026 — in progress -->
+        <div class="timeline-phase in-progress">
+          <div class="timeline-dot"></div>
+          <p class="timeline-period">By August 2026 <span class="tl-badge">In Progress</span></p>
+          <p class="timeline-heading">Hardware Integration</p>
+          <ul class="timeline-goals">
+            <li>Run SLAM packages on L1 LiDAR</li>
+            <li>Implement Mid360 LiDAR</li>
+            <li>Begin movement compatibility with newly installed arm</li>
+            <li>Deploy camera vision model on hardware</li>
+          </ul>
+        </div>
+
+        <!-- Phase 3: By End of 2026 -->
+        <div class="timeline-phase">
+          <div class="timeline-dot"></div>
+          <p class="timeline-period">By End of 2026</p>
+          <p class="timeline-heading">Autonomy &amp; Navigation</p>
+          <ul class="timeline-goals">
+            <li>Implement basic dexterity with robotic arm</li>
+            <li>Integrate SLAM with navigation through NAV2</li>
+            <li class="placeholder">Computer vision goal — TBD</li>
+          </ul>
+        </div>
+
+        <!-- Phase 4: 2027 -->
+        <div class="timeline-phase">
+          <div class="timeline-dot"></div>
+          <p class="timeline-period">RoboCup 2027</p>
+          <p class="timeline-heading">Competition</p>
+          <ul class="timeline-goals">
+            <li>Field-ready autonomous rescue robot</li>
+          </ul>
+        </div>
+
+      </div>
+      <div style="display: flex; align-items: flex-end; justify-content: center;">
+        <img src="unitree.png" alt="Unitree Go2" style="width: 100%; object-fit: contain; display: block;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- LINKS -->
+<section id="links" class="links">
+  <div class="container">
+    <p class="section-label">External links</p>
+    <h2>Learn more &amp;<br>go deeper</h2>
+    <div class="resource-grid">
+      <a class="resource-card" href="https://www.unsw.edu.au/challeng/vertically-integrated-projects/explore-vertically-integrated-projects/ai-4-everyone" target="_blank" rel="noopener">
+        <span class="rc-tag">University</span>
+        <h3>UNSW VIP — AI4Everyone</h3>
+        <p>Official UNSW ChallENG project page with academic leads, application details, and team structure.</p>
+        <span class="rc-arrow">↗</span>
+      </a>
+      <a class="resource-card" href="https://www.robocup.org/domains/2" target="_blank" rel="noopener">
+        <span class="rc-tag">Competition</span>
+        <h3>RoboCup Rescue Official Site</h3>
+        <p>The international RoboCup Rescue competition — rules, past results, and the global community we compete within.</p>
+        <span class="rc-arrow">↗</span>
+      </a>
+      <a class="resource-card" href="https://www.robocup.org" target="_blank" rel="noopener">
+        <span class="rc-tag">Community</span>
+        <h3>RoboCup Federation</h3>
+        <p>The broader RoboCup initiative — robots competing in rescue, soccer, and home-assistance worldwide.</p>
+        <span class="rc-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      UNSW VIP · RoboCup Rescue
+      <p>Part of the AI4Everyone Vertically Integrated Project</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="https://www.unsw.edu.au/challeng/vertically-integrated-projects/explore-vertically-integrated-projects/ai-4-everyone" target="_blank" rel="noopener">UNSW VIP Page</a></li>
+      <li><a href="https://www.robocup.org/domains/2" target="_blank" rel="noopener">RoboCup Rescue</a></li>
+      <li><a href="mailto:yang.song1@unsw.edu.au">Contact</a></li>
+    </ul>
+  </div>
+  <div class="ack">
+    UNSW Sydney respectfully acknowledges the Bidjigal, Biripai, Dharug, Gadigal, Gumbaynggirr, Ngunnawal and Wiradjuri peoples, on whose unceded lands we learn, teach, and work.
+  </div>
+</footer>
+
+</body>
+</html>
