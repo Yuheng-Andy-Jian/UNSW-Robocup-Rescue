@@ -144,6 +144,8 @@
   .info-row:first-child { border-top: 1px solid var(--gray-200); }
   .info-key { font-size: 0.78rem; font-weight: 500; color: var(--gray-400); letter-spacing: 0.08em; text-transform: uppercase; }
   .info-val { font-size: 0.95rem; font-weight: 500; color: var(--black); text-align: right; max-width: 60%; }
+  .info-group-photo { margin-top: 1.5rem; line-height: 0; }
+  .info-group-photo img { width: 100%; height: auto; object-fit: cover; display: block; }
   .yellow-block {
     background: var(--yellow); padding: 1.75rem; margin-top: 1.5rem;
   }
@@ -375,7 +377,6 @@
   <div class="nav-bar-accent"></div>
 </nav>
 
-<!-- HERO -->
 <div class="hero" id="hero">
   <div class="hero-left">
     <p class="hero-eyebrow">UNSW VIP · AI4Everyone</p>
@@ -395,12 +396,10 @@
   </div>
 </div>
 
-  <!-- VIDEO STRIP -->
   <div class="video-strip">
     <video src="landing_page_visuals/front.mp4" autoplay muted loop playsinline></video>
   </div>
 
-<!-- ABOUT -->
 <section id="about">
   <div class="container">
     <p class="section-label">The Project</p>
@@ -435,6 +434,9 @@
           <span class="info-key">Academic Leads</span>
           <span class="info-val">Dr. Yang Song &amp; Prof. Maurice Pagnucco</span>
         </div>
+        <div class="info-group-photo">
+          <img src="landing_page_visuals/group.jpeg" alt="Team Group Photo">
+        </div>
       </div>
     </div>
   </div>
@@ -442,7 +444,6 @@
 
 <hr>
 
-<!-- TECH -->
 <section id="tech" class="tech">
   <div class="container">
     <p class="section-label">What we build</p>
@@ -594,7 +595,6 @@
 
 <hr>
 
-<!-- TIMELINE -->
 <section id="timeline" class="timeline">
   <div class="container">
     <p class="section-label">Project Progress</p>
@@ -602,7 +602,6 @@
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: stretch; margin-top: 3rem;">
       <div class="timeline-track" style="margin-top: 0;">
 
-        <!-- Phase 1: By May 2026 — complete -->
         <div class="timeline-phase complete">
           <div class="timeline-dot"></div>
           <p class="timeline-period">By May 2026 <span class="tl-badge">Achieved</span></p>
@@ -615,7 +614,6 @@
           </ul>
         </div>
 
-        <!-- Phase 2: By End of August 2026 — in progress -->
         <div class="timeline-phase in-progress">
           <div class="timeline-dot"></div>
           <p class="timeline-period">By August 2026 <span class="tl-badge">In Progress</span></p>
@@ -629,7 +627,6 @@
           </ul>
         </div>
 
-        <!-- Phase 3: By End of 2026 -->
         <div class="timeline-phase">
           <div class="timeline-dot"></div>
           <p class="timeline-period">By End of 2026</p>
@@ -641,7 +638,6 @@
           </ul>
         </div>
 
-        <!-- Phase 4: 2027 -->
         <div class="timeline-phase">
           <div class="timeline-dot"></div>
           <p class="timeline-period">RoboCup 2027</p>
@@ -661,7 +657,6 @@
 
 <hr>
 
-<!-- LINKS -->
 <section id="links" class="links">
   <div class="container">
     <p class="section-label">External links</p>
@@ -689,7 +684,6 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
