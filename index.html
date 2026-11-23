@@ -362,6 +362,38 @@
     .gallery-grid { grid-template-columns: 1fr; }
     .gallery-item.wide { grid-column: span 1; }
   }
+  /* TASK DEMONSTRATIONS */
+  .tasks { scroll-margin-top: 60px; }
+  .task-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .task-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    display: flex;
+    flex-direction: column;
+  }
+  .task-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    height: auto;
+    object-fit: contain;
+    background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .task-card figcaption { padding: 1.25rem 1.5rem 1.5rem; }
+  .task-card h3 { font-size: 1.125rem; margin-bottom: 0.35rem; }
+  .task-card p { color: var(--gray-600); line-height: 1.65; }
+  @media (max-width: 900px) {
+    .task-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .task-grid { grid-template-columns: 1fr; }
+  }
+
 </style>
 </head>
 <body>
@@ -371,6 +403,7 @@
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#tech">Technology</a></li>
+    <li><a href="#tasks">Tasks</a></li>
     <li><a href="#timeline">Timeline</a></li>
     <li><a href="#links">Links</a></li>
   </ul>
@@ -384,6 +417,7 @@
     <p class="hero-sub">We're building an AI-powered quadruped robot that navigates disaster zones, maps unknown environments, and identifies survivors — autonomously.</p>
     <div class="hero-actions">
       <a class="btn-primary" href="#about">Explore the project</a>
+      <a class="btn-ghost" href="#tasks">View task demonstrations</a>
     </div>
   </div>
   <div class="hero-right">
@@ -575,7 +609,7 @@
 
       <article class="tech-detail" id="tech-ai">
         <div class="tech-detail-media">
-          <img src="landing_page_visuals/AI Decision-Making.png" alt="Embodied AI technology detail">
+          <img src="landing_page_visuals/sim_arena.png" alt="Embodied AI technology detail">
         </div>
         <div class="tech-detail-body">
           <p class="tech-detail-kicker">06 · Autonomy</p>
@@ -589,6 +623,40 @@
           </ul>
         </div>
       </article>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<section id="tasks" class="tasks" aria-labelledby="tasks-heading">
+  <div class="container">
+    <h2 id="tasks-heading">Task Demonstrations</h2>
+    <div class="task-grid">
+      <figure class="task-card">
+        <img src="landing_page_visuals/dog_open_door.png" width="618" height="613" loading="lazy"
+          alt="Unitree Go2-W with its mounted arm reaching for a door lever">
+        <figcaption>
+          <h3>Open Doors</h3>
+          <p>The Go2-W uses its mounted arm to operate a lever handle and open a door.</p>
+        </figcaption>
+      </figure>
+      <figure class="task-card">
+        <img src="landing_page_visuals/inspection.png" width="496" height="378" loading="lazy"
+          alt="Camera view of an analogue pressure gauge with a 60.1 psi reading overlaid">
+        <figcaption>
+          <h3>Inspect Obstructed Images</h3>
+          <p>Computer vision detects an analogue pressure gauge and reads its needle position. The example shows 60.1 psi.</p>
+        </figcaption>
+      </figure>
+      <figure class="task-card">
+        <img src="landing_page_visuals/estop.png" width="427" height="387" loading="lazy"
+          alt="Robotic arm positioned above a red emergency stop button, with button detection shown on a laptop">
+        <figcaption>
+          <h3>Press E-Stops</h3>
+          <p>In this bench setup, the arm uses camera-based detection to locate the emergency stop button for pressing.</p>
+        </figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -648,7 +716,10 @@
         </div>
 
       </div>
-      <div style="display: flex; align-items: flex-end; justify-content: center;">
+      <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 1.5rem;">
+        <img src="landing_page_visuals/robocup2027.jpg" width="1280" height="720" loading="lazy"
+          alt="RoboCup 2027: Welcome to Nuremberg, with a humanoid robot overlooking the city."
+          style="display: block; width: 100%; height: auto;">
         <img src="landing_page_visuals/dog_arm_lidar_camera.jpg" alt="Unitree Go2" style="width: 100%; object-fit: contain; display: block;">
       </div>
     </div>
