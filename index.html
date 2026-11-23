@@ -21,6 +21,14 @@
   html { scroll-behavior: smooth; }
   body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--black); line-height: 1.6; overflow-x: hidden; }
 
+  /* SCROLL PROGRESS */
+  .scroll-progress {
+    position: fixed; top: 60px; left: 0; right: 0; z-index: 101;
+    height: 3px; background: var(--yellow);
+    transform: scaleX(0); transform-origin: 0 50%;
+    pointer-events: none;
+  }
+
   /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -38,6 +46,17 @@
   .nav-links a { color: var(--gray-600); text-decoration: none; font-size: 0.875rem; font-weight: 400; transition: color 0.15s; }
   .nav-links a:hover { color: var(--black); }
   .nav-bar-accent { width: 28px; height: 3px; background: var(--yellow); }
+  .nav-toggle {
+    display: none; width: 44px; height: 44px; margin-right: -10px;
+    background: none; border: 0; cursor: pointer;
+    flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  }
+  .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--black); transition: transform 0.2s, opacity 0.2s; }
+  .nav-toggle span:first-child { background: var(--yellow-deep); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--black); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-toggle:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
 
   /* HERO */
   .hero {
@@ -154,9 +173,9 @@
 
   /* TECH */
   .tech { background: var(--gray-100); }
-  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 3rem; border-top: 1px solid var(--gray-200); border-left: 1px solid var(--gray-200); }
+  .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 3rem; border-top: 1px solid var(--gray-200); border-left: 1px solid var(--gray-200); }
   .pillar {
-    padding: 2rem; border-right: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);
+    padding: 1.75rem 1.5rem; border-right: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);
     background: var(--gray-100); transition: background 0.2s;
     display: block; color: inherit; text-decoration: none;
   }
@@ -248,8 +267,16 @@
 
   /* TIMELINE */
   .timeline { background: var(--white); }
+  .timeline-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+    align-items: stretch; margin-top: 3rem;
+  }
+  .timeline-media {
+    display: flex; flex-direction: column; justify-content: flex-end; gap: 1.5rem;
+  }
+  .timeline-media img { display: block; width: 100%; height: auto; }
   .timeline-track {
-    position: relative; margin-top: 3rem;
+    position: relative;
     padding-left: 2rem;
   }
   .timeline-track::before {
@@ -341,7 +368,15 @@
 
   @media(max-width: 900px) {
     nav { padding: 0 1.5rem; }
-    .nav-links { display: none; }
+    .nav-links {
+      display: none; position: absolute; top: 60px; left: 0; right: 0;
+      flex-direction: column; gap: 0; background: var(--white);
+      border-bottom: 1px solid var(--gray-200); box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { display: block; padding: 0.9rem 1.5rem; font-size: 1rem; color: var(--black); border-top: 1px solid var(--gray-200); }
+    .nav-bar-accent { display: none; }
+    .nav-toggle { display: flex; }
     .hero { grid-template-columns: 1fr; min-height: auto; }
     .hero-left { padding: 5rem 1.5rem 3rem; border-right: none; border-bottom: 1px solid var(--gray-200); }
     .hero-right { min-height: 280px; padding: 2rem 1.5rem; }
@@ -353,12 +388,23 @@
     .resource-grid { grid-template-columns: 1fr; }
     .gallery-grid { grid-template-columns: 1fr 1fr; }
     .gallery-item.wide { grid-column: span 2; }
+    .timeline-layout { grid-template-columns: 1fr; gap: 3rem; }
     section { padding: 4rem 1.5rem; }
     .join-inner { padding: 2.5rem 1.5rem; }
     footer { padding: 2rem 1.5rem; }
   }
   @media(max-width: 560px) {
-    .pillars { grid-template-columns: 1fr; }
+    .pillars { grid-template-columns: 1fr; margin-top: 2rem; }
+    .pillar {
+      display: grid; grid-template-columns: 2.25rem 1fr; column-gap: 0.75rem;
+      padding: 1.25rem 1.25rem 1.25rem 1rem;
+    }
+    .pillar-num { grid-row: 1 / span 3; font-size: 2rem; margin-bottom: 0; }
+    .pillar h3 { margin-bottom: 0.35rem; }
+    .pillar-more { margin-top: 0.6rem; }
+    .tech-details { margin-top: 2.5rem; }
+    .tech-detail-body { padding: 1.5rem 1.25rem 1.75rem; }
+    .resource-card { padding: 1.75rem 1.25rem; }
     .gallery-grid { grid-template-columns: 1fr; }
     .gallery-item.wide { grid-column: span 1; }
   }
@@ -387,20 +433,35 @@
   .task-card figcaption { padding: 1.25rem 1.5rem 1.5rem; }
   .task-card h3 { font-size: 1.125rem; margin-bottom: 0.35rem; }
   .task-card p { color: var(--gray-600); line-height: 1.65; }
+  .task-wide {
+    grid-column: 1 / -1;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+  }
+  .task-wide figcaption { text-align: center; max-width: 728px; margin: 0 auto; padding: 1.75rem 1.5rem; }
+  .task-wide h3 { font-size: 1.5rem; margin-bottom: 0.35rem; }
+  .task-wide p { color: var(--gray-600); line-height: 1.65; }
+  .task-wide picture { display: block; border-top: 1px solid var(--gray-200); }
+  .task-wide img { display: block; width: 100%; height: auto; }
   @media (max-width: 900px) {
     .task-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 560px) {
     .task-grid { grid-template-columns: 1fr; }
+    .task-card img { aspect-ratio: auto; }
+    .task-wide figcaption { text-align: left; padding: 1.25rem 1.5rem 1.5rem; }
+    .task-wide h3 { font-size: 1.125rem; }
   }
 
 </style>
 </head>
 <body>
 
+<div class="scroll-progress" aria-hidden="true"></div>
+
 <nav>
   <a class="nav-brand" href="#hero">UNSW VIP <span>· RoboCup Rescue</span></a>
-  <ul class="nav-links">
+  <ul class="nav-links" id="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#tech">Technology</a></li>
     <li><a href="#tasks">Tasks</a></li>
@@ -408,6 +469,9 @@
     <li><a href="#links">Links</a></li>
   </ul>
   <div class="nav-bar-accent"></div>
+  <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <div class="hero" id="hero">
@@ -501,22 +565,34 @@
         <p>Deep learning models identify victims, hazards, and landmarks from camera and depth sensor streams, in real time.</p>
         <span class="pillar-more">View details</span>
       </a>
-      <a class="pillar" href="#tech-ros">
+      <a class="pillar" href="#tech-arm">
         <div class="pillar-num">04</div>
+        <h3>Robotic Arm</h3>
+        <p>A mounted 6-DoF arm with grippers lets the robot open doors, inspect, and manipulate objects, coordinated with the legs through whole-body control.</p>
+        <span class="pillar-more">View details</span>
+      </a>
+      <a class="pillar" href="#tech-ros">
+        <div class="pillar-num">05</div>
         <h3>ROS Architecture</h3>
         <p>All modules — sensors, planners, controllers — communicate through ROS, enabling modular development and fast iteration.</p>
         <span class="pillar-more">View details</span>
       </a>
       <a class="pillar" href="#tech-fusion">
-        <div class="pillar-num">05</div>
+        <div class="pillar-num">06</div>
         <h3>Sensor Fusion</h3>
         <p>LiDAR, IMU, and RGB-D cameras are fused to give the robot a robust, low-latency understanding of its surroundings.</p>
         <span class="pillar-more">View details</span>
       </a>
       <a class="pillar" href="#tech-ai">
-        <div class="pillar-num">06</div>
+        <div class="pillar-num">07</div>
         <h3>Embodied AI</h3>
         <p>Behaviour trees and reinforcement-learned policies coordinate exploration strategies to maximise victim-detection coverage.</p>
+        <span class="pillar-more">View details</span>
+      </a>
+      <a class="pillar" href="#tech-rl">
+        <div class="pillar-num">08</div>
+        <h3>Complex Terrain Locomotion</h3>
+        <p>Reinforcement-learned walking policies, trained in simulation, let the robot cross stairs, gaps, and rough rubble-like terrain.</p>
         <span class="pillar-more">View details</span>
       </a>
     </div>
@@ -573,12 +649,29 @@
         </div>
       </article>
 
+      <article class="tech-detail" id="tech-arm">
+        <div class="tech-detail-media">
+          <img src="landing_page_visuals/robotic_arm.jpg" alt="Robotic arms with grippers used for manipulation">
+        </div>
+        <div class="tech-detail-body">
+          <p class="tech-detail-kicker">04 · Manipulation</p>
+          <h3>Robotic Arm</h3>
+          <p>Through a mounted robot arm, the robot can tackle challenging inspection and manipulation tasks. Through whole-body control, the quadruped robot can move in collaboration with this arm to perform tasks that neither could do by itself.</p>
+          <ul class="tech-points">
+            <li>Inverse kinematic control</li>
+            <li>6 degrees of freedom</li>
+            <li>Manipulation with grippers</li>
+            <li>Depth camera integration</li>
+          </ul>
+        </div>
+      </article>
+
       <article class="tech-detail" id="tech-ros">
         <div class="tech-detail-media">
           <img src="landing_page_visuals/ros_architecture.png" alt="ROS architecture technology detail">
         </div>
         <div class="tech-detail-body">
-          <p class="tech-detail-kicker">04 · System</p>
+          <p class="tech-detail-kicker">05 · System</p>
           <h3>ROS Architecture</h3>
           <p>ROS keeps the project modular. Sensors, mapping, navigation, control, web monitoring, and development tools communicate through topics, services, actions, and launch files so each subsystem can be developed and tested independently.</p>
           <ul class="tech-points">
@@ -595,7 +688,7 @@
           <img src="landing_page_visuals/sensor_fusion.png" alt="Sensor fusion technology detail">
         </div>
         <div class="tech-detail-body">
-          <p class="tech-detail-kicker">05 · Sensors</p>
+          <p class="tech-detail-kicker">06 · Sensors</p>
           <h3>Sensor Fusion</h3>
           <p>Sensor fusion combines LiDAR, IMU, camera, and depth information into a more stable estimate than any single sensor can provide. This improves mapping, localisation, and decision-making in cluttered rescue environments.</p>
           <ul class="tech-points">
@@ -612,7 +705,7 @@
           <img src="landing_page_visuals/sim_arena.png" alt="Embodied AI technology detail">
         </div>
         <div class="tech-detail-body">
-          <p class="tech-detail-kicker">06 · Autonomy</p>
+          <p class="tech-detail-kicker">07 · Autonomy</p>
           <h3>Embodied AI</h3>
           <p>Decision-making coordinates the robot's exploration strategy. It connects perception, mapping, and navigation so the robot can decide where to inspect next, when to recover, and how to prioritise rescue-relevant discoveries.</p>
           <ul class="tech-points">
@@ -620,6 +713,23 @@
             <li>Behaviour-tree style logic</li>
             <li>Deep learning in computer vision</li>
             <li>Reinforcement learning in walk</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="tech-detail" id="tech-rl">
+        <div class="tech-detail-media">
+          <img src="landing_page_visuals/rl_terrain.png" alt="Simulated quadrupeds training on stairs, pits, and rough terrain in Isaac Lab">
+        </div>
+        <div class="tech-detail-body">
+          <p class="tech-detail-kicker">08 · Reinforcement Learning</p>
+          <h3>Complex Terrain Locomotion</h3>
+          <p>Using reinforcement learning, the robot learns the best way to cross difficult rough terrain challenges. Through a combination of terrain curriculum, student-teacher imitation learning, and perception, our RL controller can cross the cubic terrain test fields.</p>
+          <ul class="tech-points">
+            <li>Isaac Lab simulation</li>
+            <li>36 hours of training</li>
+            <li>Reinforcement learning (PPO)</li>
+            <li>Sim-to-sim and sim-to-real transfer</li>
           </ul>
         </div>
       </article>
@@ -657,6 +767,17 @@
           <p>In this bench setup, the arm uses camera-based detection to locate the emergency stop button for pressing.</p>
         </figcaption>
       </figure>
+      <figure class="task-wide">
+        <figcaption>
+          <h3>Rough Terrain Locomotion: Cubic Step Fields Terrain</h3>
+          <p>In this simulated terrain task, the robot must traverse uneven 0-15-30cm cubic step fields using low-level Reinforcement Learning control.</p>
+        </figcaption>
+        <picture>
+          <source media="(max-width: 560px)" srcset="landing_page_visuals/cubic_step_fields_2x2.jpg" width="1928" height="1088">
+          <img src="landing_page_visuals/cubic_step_fields.jpg" width="3864" height="540" loading="lazy"
+            alt="Four hardware frames from 2.48 s to 8.88 s showing the Go2 climbing onto and walking across stacked wooden step blocks">
+        </picture>
+      </figure>
     </div>
   </div>
 </section>
@@ -667,8 +788,8 @@
   <div class="container">
     <p class="section-label">Project Progress</p>
     <h2>Road to<br>RoboCup 2027</h2>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: stretch; margin-top: 3rem;">
-      <div class="timeline-track" style="margin-top: 0;">
+    <div class="timeline-layout">
+      <div class="timeline-track">
 
         <div class="timeline-phase complete">
           <div class="timeline-dot"></div>
@@ -682,9 +803,9 @@
           </ul>
         </div>
 
-        <div class="timeline-phase in-progress">
+        <div class="timeline-phase complete">
           <div class="timeline-dot"></div>
-          <p class="timeline-period">By August 2026 <span class="tl-badge">In Progress</span></p>
+          <p class="timeline-period">By August 2026 <span class="tl-badge">Achieved</span></p>
           <p class="timeline-heading">Hardware Integration</p>
           <ul class="timeline-goals">
             <li>Run SLAM packages on mid360 LiDAR</li>
@@ -695,14 +816,15 @@
           </ul>
         </div>
 
-        <div class="timeline-phase">
+        <div class="timeline-phase in-progress">
           <div class="timeline-dot"></div>
-          <p class="timeline-period">By End of 2026</p>
-          <p class="timeline-heading">Autonomy &amp; Navigation</p>
+          <p class="timeline-period">By End of 2026 <span class="tl-badge">In Progress</span></p>
+          <p class="timeline-heading">Finish and Integrate Task Demonstrations</p>
           <ul class="timeline-goals">
-            <li>Implement basic dexterity with robotic arm</li>
-            <li>Integrate SLAM with navigation through NAV2</li>
-            <li class="placeholder">Integrate YOLO model with Realsense depth camera</li>
+            <li>Open doors</li>
+            <li>Inspect obstructed images</li>
+            <li>Press E-stops</li>
+            <li>Rough terrain locomotion: cubic step fields</li>
           </ul>
         </div>
 
@@ -716,11 +838,10 @@
         </div>
 
       </div>
-      <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 1.5rem;">
+      <div class="timeline-media">
         <img src="landing_page_visuals/robocup2027.jpg" width="1280" height="720" loading="lazy"
-          alt="RoboCup 2027: Welcome to Nuremberg, with a humanoid robot overlooking the city."
-          style="display: block; width: 100%; height: auto;">
-        <img src="landing_page_visuals/dog_arm_lidar_camera.jpg" alt="Unitree Go2" style="width: 100%; object-fit: contain; display: block;">
+          alt="RoboCup 2027: Welcome to Nuremberg, with a humanoid robot overlooking the city.">
+        <img src="landing_page_visuals/dog_arm_lidar_camera.jpg" loading="lazy" alt="Unitree Go2">
       </div>
     </div>
   </div>
@@ -772,5 +893,40 @@
   </div>
 </footer>
 
+<script>
+  (function () {
+    var bar = document.querySelector('.scroll-progress');
+    if (!bar) return;
+    function update() {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var p = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+      bar.style.transform = 'scaleX(' + p + ')';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    window.addEventListener('load', update);
+    update();
+  })();
+
+  (function () {
+    var toggle = document.querySelector('.nav-toggle');
+    var links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    function setOpen(open) {
+      links.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+    toggle.addEventListener('click', function () {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+    links.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  })();
+</script>
 </body>
 </html>
