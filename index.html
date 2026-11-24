@@ -456,11 +456,24 @@
     background: var(--white);
     border: 1px solid var(--gray-200);
   }
-  .task-wide figcaption { text-align: center; max-width: 728px; margin: 0 auto; padding: 1.75rem 1.5rem; }
+  .task-wide > figcaption { text-align: center; max-width: 728px; margin: 0 auto; padding: 1.75rem 1.5rem; }
   .task-wide h3 { font-size: 1.5rem; margin-bottom: 0.35rem; }
   .task-wide p { color: var(--gray-600); line-height: 1.65; }
   .task-wide picture { display: block; border-top: 1px solid var(--gray-200); }
   .task-wide img { display: block; width: 100%; height: auto; }
+  /* Column widths follow each video's aspect ratio (1080x1742 and 1920x1080),
+     so both videos render at the same height without cropping. */
+  .qual-videos {
+    display: grid; grid-template-columns: 0.62fr 1.778fr; gap: 1px;
+    background: var(--gray-200); border-top: 1px solid var(--gray-200);
+  }
+  .qual-video { background: var(--white); margin: 0; }
+  .qual-video video { display: block; width: 100%; height: auto; background: var(--gray-100); }
+  .qual-video-label {
+    padding: 0.75rem 1rem;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gray-600);
+  }
   @media (max-width: 900px) {
     .task-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
@@ -474,8 +487,10 @@
       height: auto;
       max-height: 75svh;
     }
-    .task-wide figcaption { text-align: left; padding: 1.25rem 1.5rem 1.5rem; }
+    .task-wide > figcaption { text-align: left; padding: 1.25rem 1.5rem 1.5rem; }
     .task-wide h3 { font-size: 1.125rem; }
+    .qual-videos { grid-template-columns: 1fr; }
+    .qual-video video { max-height: 75svh; object-fit: contain; }
   }
 
 </style>
@@ -768,6 +783,8 @@
   <div class="container">
     <h2 id="tasks-heading">Task Demonstrations</h2>
     <div class="task-grid">
+        </div>
+      </figure>
       <figure class="task-card">
         <div class="task-video">
           <video width="1080" height="1920" autoplay muted loop playsinline controls
@@ -797,6 +814,26 @@
           <p>In this bench setup, the arm uses camera-based detection to locate the emergency stop button for pressing.</p>
         </figcaption>
       </figure>
+      <figure class="task-wide">
+        <figcaption>
+          <h3>Qualification Task</h3>
+          <p>This is the qualification task needed for the 2027 competition. It involves integrating autonomous navigation, arm manipulation and the inspection task.</p>
+        </figcaption>
+        <div class="qual-videos">
+          <figure class="qual-video">
+            <video width="1080" height="1742" muted loop playsinline controls preload="metadata" data-autoplay
+              aria-label="Qualification task run in real time">
+              <source src="landing_page_visuals/Inspection_task_real.mp4" type="video/mp4">
+            </video>
+            <figcaption class="qual-video-label">Real time</figcaption>
+          </figure>
+          <figure class="qual-video">
+            <video width="1920" height="1080" muted loop playsinline controls preload="metadata" data-autoplay
+              aria-label="Qualification task mission view at 16 times speed">
+              <source src="landing_page_visuals/Inspection_task_16x_speed.mp4" type="video/mp4">
+            </video>
+            <figcaption class="qual-video-label">16× speed</figcaption>
+          </figure>
       <figure class="task-wide">
         <figcaption>
           <h3>Rough Terrain Locomotion: Cubic Step Fields Terrain</h3>
@@ -924,6 +961,25 @@
 </footer>
 
 <script>
+  // Autoplay [data-autoplay] videos only while they are on screen, so the large
+  // qualification videos don't download until the visitor scrolls to them.
+  (function () {
+    var videos = document.querySelectorAll('video[data-autoplay]');
+    if (!videos.length) return;
+    function play(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    if (!('IntersectionObserver' in window)) {
+      videos.forEach(play);
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) play(e.target);
+        else e.target.pause();
+      });
+    }, { rootMargin: '200px 0px' });
+    videos.forEach(function (v) { io.observe(v); });
+  })();
+
   (function () {
     var bar = document.querySelector('.scroll-progress');
     if (!bar) return;
